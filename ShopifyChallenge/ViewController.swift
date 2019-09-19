@@ -20,17 +20,17 @@ class ViewController: UIViewController {
         verticalStackView.spacing = 20
         verticalStackView.backgroundColor = .green
 
-        for i in 0..<5 {
+        for _ in 0..<5 {
             let stackView = UIStackView()
             stackView.axis = .horizontal
             stackView.alignment = .center
             stackView.distribution = .equalSpacing
             stackView.spacing = 10
 
-            for j in 0..<4 {
+            for _ in 0..<4 {
                 let card = CardButton(frame: CGRect(x: 0, y: 0, width: 75, height: 85))
-                card.setTitle("\(i*4 + j+1)", for: .normal)
                 cardButtons.append(card)
+                card.setImage(UIImage(named: "question-mark.png"), for: .normal)
                 stackView.addArrangedSubview(card)
             }
             stackView.translatesAutoresizingMaskIntoConstraints = false
