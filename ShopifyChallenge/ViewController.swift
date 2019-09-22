@@ -11,6 +11,7 @@ import UIKit
 class ViewController: UIViewController {
     var game: GameController = GameController(numberOfPairs: 10)
     var cardButtons: [CardButton] = []
+    var scoreLabel: UILabel!
 
     override func loadView() {
         super.loadView()
@@ -43,6 +44,13 @@ class ViewController: UIViewController {
         self.view.addSubview(verticalStackView)
         verticalStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         verticalStackView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor).isActive = true
+
+        scoreLabel = UILabel(frame: CGRect(x: 50, y: 50, width: 200, height: 21))
+        scoreLabel.text = "Matches: \(game.matchesFound)"
+        scoreLabel.textColor = .white
+        scoreLabel.font = UIFont.systemFont(ofSize: 25.0)
+        self.view.addSubview(scoreLabel)
+
     }
 
     override func viewDidLoad() {
@@ -67,6 +75,8 @@ class ViewController: UIViewController {
                 btn.imageView?.frame = CGRect(x: 0, y: 0, width: 75, height: 85)
                 if !game.cards[index].isMatched {
                     UIView.transition(with: btn, duration: 0.3, options: .transitionFlipFromRight, animations: nil, completion: nil)
+                } else {
+                    scoreLabel.text = "Matches: \(game.matchesFound)"
                 }
             }
         }
