@@ -8,20 +8,50 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+protocol ModalHandler {
+    func startNewGame()
+}
+
+class ViewController: UIViewController, ModalHandler {
     var game: GameController = GameController(numberOfPairs: 10)
     var cardButtons: [CardButton] = []
     var scoreLabel: UILabel!
 
     override func loadView() {
         super.loadView()
-        
+        setUpLayout()
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        for cardButton in cardButtons {
+            cardButton.setGradientBackground(colorOne: Colors.purple, colorTwo: Colors.darkPurple)
+        }
+    }
+
+    func setUpLayout() {
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .center
         verticalStackView.distribution = .equalSpacing
         verticalStackView.spacing = 20
-        verticalStackView.backgroundColor = .green
+
+        let appLogo = UIImage(named: "matchify")
+        let appImageView = UIImageView(image: appLogo)
+        appImageView.widthAnchor.constraint(equalToConstant: 300).isActive = true
+        appImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        appImageView.contentMode = .scaleAspectFit
+        verticalStackView.addArrangedSubview(appImageView)
+
+        scoreLabel = UILabel()
+        scoreLabel.text = "Matches: \(game.matchesFound)"
+        scoreLabel.textColor = .white
+        scoreLabel.font = UIFont.systemFont(ofSize: 25.0)
+        verticalStackView.addArrangedSubview(scoreLabel)
 
         for _ in 0..<5 {
             let stackView = UIStackView()
@@ -44,27 +74,9 @@ class ViewController: UIViewController {
         self.view.addSubview(verticalStackView)
         verticalStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         verticalStackView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor).isActive = true
-
-        scoreLabel = UILabel(frame: CGRect(x: 50, y: 50, width: 200, height: 21))
-        scoreLabel.text = "Matches: \(game.matchesFound)"
-        scoreLabel.textColor = .white
-        scoreLabel.font = UIFont.systemFont(ofSize: 25.0)
-        self.view.addSubview(scoreLabel)
-
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        for cardButton in cardButtons {
-            cardButton.setGradientBackground(colorOne: Colors.purple, colorTwo: Colors.darkPurple)
-        }
-    }
-
-    func updateButtonsViews(indeces: [Int]) {
+    func updateButtonViews(indeces: [Int]) {
         for index in indeces {
             let btn = cardButtons[index]
             if !game.cards[index].isFacedUp {
@@ -77,32 +89,38 @@ class ViewController: UIViewController {
                     UIView.transition(with: btn, duration: 0.3, options: .transitionFlipFromRight, animations: nil, completion: nil)
                 } else {
                     scoreLabel.text = "Matches: \(game.matchesFound)"
+                    if game.matchesFound == 10 {
+                        let scoreViewController = ScoreViewController()
+                        scoreViewController.flips = game.flipsMade
+                        scoreViewController.delegate = self
+                        scoreViewController.modalPresentationStyle = .overCurrentContext
+                        present(scoreViewController, animated: true, completion: nil)
+                    }
                 }
             }
         }
+    }
+
+    func startNewGame() {
+        print("DISMISSED")
+        for view in self.view.subviews {
+            view.removeFromSuperview()
+        }
+        cardButtons = []
+        scoreLabel.text = "Matches: 0"
+        game = GameController(numberOfPairs: 10)
+        setUpLayout()
     }
 
     @objc func flipCard(sender: CardButton) {
         if let cardIndex = cardButtons.firstIndex(of: sender) {
-            updateButtonsViews(indeces: [cardIndex])
+            updateButtonViews(indeces: [cardIndex])
             game.updateCard(at: cardIndex) { result in
                 switch result {
-                case .success(let indeces): self.updateButtonsViews(indeces: indeces)
+                case .success(let indeces): self.updateButtonViews(indeces: indeces)
                 case .failure(let error): print(error)
                 }
             }
         }
-    }
-}
-
-extension UIView {
-    func setGradientBackground(colorOne: UIColor, colorTwo: UIColor) {
-        let gradientLayer = CAGradientLayer()
-        gradientLayer.frame = bounds
-        gradientLayer.colors = [colorOne.cgColor, colorTwo.cgColor]
-        gradientLayer.locations = [0.0, 1.0]
-        gradientLayer.startPoint = CGPoint(x: 0.5, y: 0.0)
-        gradientLayer.endPoint = CGPoint(x: 0.5, y: 1.0)
-        layer.insertSublayer(gradientLayer, at: 0)
     }
 }

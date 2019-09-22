@@ -22,13 +22,16 @@ class GameController {
     }
     var openedCardIndex: Int?
     var matchesFound: Int = 0
+    var flipsMade: Int = 0
 
     init(numberOfPairs: Int) {
         self.numberOfPairs = numberOfPairs
+        cards = []
         fetchData()
     }
 
     func updateCard(at index: Int, handler: @escaping (Result<[Int], Error>) -> Void) {
+        flipsMade += 1
         if !cards[index].isMatched {
             if let openedCardIndex = openedCardIndex, index != openedCardIndex {
                 cards[index].isFacedUp = true
