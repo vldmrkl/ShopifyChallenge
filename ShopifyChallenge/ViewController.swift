@@ -9,10 +9,12 @@
 import UIKit
 
 class ViewController: UIViewController {
+    var game: GameController = GameController(numberOfPairs: 10)
     var cardButtons: [CardButton] = []
 
     override func loadView() {
         super.loadView()
+        
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .center
@@ -28,10 +30,11 @@ class ViewController: UIViewController {
             stackView.spacing = 10
 
             for _ in 0..<4 {
-                let card = CardButton(frame: CGRect(x: 0, y: 0, width: 75, height: 85))
-                cardButtons.append(card)
-                card.setImage(UIImage(named: "question-mark.png"), for: .normal)
-                stackView.addArrangedSubview(card)
+                let cardButton = CardButton(frame: CGRect(x: 0, y: 0, width: 75, height: 85))
+                cardButtons.append(cardButton)
+                cardButton.setImage(UIImage(named: "question-mark.png"), for: .normal)
+                cardButton.addTarget(self, action: #selector(flipCard), for: .touchUpInside)
+                stackView.addArrangedSubview(cardButton)
             }
             stackView.translatesAutoresizingMaskIntoConstraints = false
             verticalStackView.addArrangedSubview(stackView)
@@ -48,10 +51,36 @@ class ViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
+        for cardButton in cardButtons {
+            cardButton.setGradientBackground(colorOne: Colors.purple, colorTwo: Colors.darkPurple)
+        }
+    }
 
-        for card in cardButtons {
-            card.setGradientBackground(colorOne: Colors.purple, colorTwo: Colors.darkPurple)
+    func updateButtonsViews(indeces: [Int]) {
+        for index in indeces {
+            let btn = cardButtons[index]
+            if !game.cards[index].isFacedUp {
+                btn.setImage(UIImage(named: "question-mark.png"), for: .normal)
+                UIView.transition(with: btn, duration: 0.3, options: .transitionFlipFromLeft, animations: nil, completion: nil)
+            } else {
+                btn.setImage(game.cards[index].image, for: .normal)
+                btn.imageView?.frame = CGRect(x: 0, y: 0, width: 75, height: 85)
+                if !game.cards[index].isMatched {
+                    UIView.transition(with: btn, duration: 0.3, options: .transitionFlipFromRight, animations: nil, completion: nil)
+                }
+            }
+        }
+    }
+
+    @objc func flipCard(sender: CardButton) {
+        if let cardIndex = cardButtons.firstIndex(of: sender) {
+            updateButtonsViews(indeces: [cardIndex])
+            game.updateCard(at: cardIndex) { result in
+                switch result {
+                case .success(let indeces): self.updateButtonsViews(indeces: indeces)
+                case .failure(let error): print(error)
+                }
+            }
         }
     }
 }
