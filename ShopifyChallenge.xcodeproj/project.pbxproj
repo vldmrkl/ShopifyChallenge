@@ -7,8 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2D42ECF22333205500873C1C /* robot.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D42ECF12333205500873C1C /* robot.png */; };
+		2D2C30AC2334742F0056E216 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C30AB2334742F0056E216 /* Product.swift */; };
+		2D2C30AE233474A50056E216 /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D2C30AD233474A50056E216 /* Service.swift */; };
 		2D42ECF823332E3E00873C1C /* question-mark.png in Resources */ = {isa = PBXBuildFile; fileRef = 2D42ECF723332E3E00873C1C /* question-mark.png */; };
+		2D8CA5D52336A4CB008DAC14 /* GameController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CA5D42336A4CB008DAC14 /* GameController.swift */; };
+		2D8CA5D72336A550008DAC14 /* Card.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D8CA5D62336A550008DAC14 /* Card.swift */; };
 		2D90B2322331DDB100E74F36 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D90B2312331DDB100E74F36 /* Colors.swift */; };
 		2DD4EA8023288C0600B11F90 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4EA7F23288C0600B11F90 /* AppDelegate.swift */; };
 		2DD4EA8223288C0600B11F90 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD4EA8123288C0600B11F90 /* ViewController.swift */; };
@@ -20,8 +23,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2D42ECF12333205500873C1C /* robot.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = robot.png; sourceTree = "<group>"; };
+		2D2C30AB2334742F0056E216 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		2D2C30AD233474A50056E216 /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		2D42ECF723332E3E00873C1C /* question-mark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "question-mark.png"; sourceTree = "<group>"; };
+		2D8CA5D42336A4CB008DAC14 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
+		2D8CA5D62336A550008DAC14 /* Card.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Card.swift; sourceTree = "<group>"; };
 		2D90B2312331DDB100E74F36 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		2DD4EA7C23288C0600B11F90 /* ShopifyChallenge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShopifyChallenge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DD4EA7F23288C0600B11F90 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -65,13 +71,16 @@
 			isa = PBXGroup;
 			children = (
 				2DD4EA7F23288C0600B11F90 /* AppDelegate.swift */,
+				2D8CA5D62336A550008DAC14 /* Card.swift */,
 				2DE6EB1D23307FA3000383C5 /* CardButton.swift */,
+				2D8CA5D42336A4CB008DAC14 /* GameController.swift */,
 				2DD4EA8123288C0600B11F90 /* ViewController.swift */,
-				2D90B2312331DDB100E74F36 /* Colors.swift */,
+				2D2C30AB2334742F0056E216 /* Product.swift */,
+				2D2C30AD233474A50056E216 /* Service.swift */,
 				2DD4EA8323288C0600B11F90 /* Main.storyboard */,
 				2DD4EA8923288C0700B11F90 /* Assets.xcassets */,
-				2D42ECF12333205500873C1C /* robot.png */,
 				2D42ECF723332E3E00873C1C /* question-mark.png */,
+				2D90B2312331DDB100E74F36 /* Colors.swift */,
 				2DD4EA8B23288C0700B11F90 /* LaunchScreen.storyboard */,
 				2DD4EA8E23288C0700B11F90 /* Info.plist */,
 				2DD4EA8623288C0600B11F90 /* ShopifyChallenge.xcdatamodeld */,
@@ -140,7 +149,6 @@
 				2D42ECF823332E3E00873C1C /* question-mark.png in Resources */,
 				2DD4EA8D23288C0700B11F90 /* LaunchScreen.storyboard in Resources */,
 				2DD4EA8A23288C0700B11F90 /* Assets.xcassets in Resources */,
-				2D42ECF22333205500873C1C /* robot.png in Resources */,
 				2DD4EA8523288C0600B11F90 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,10 +161,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DD4EA8223288C0600B11F90 /* ViewController.swift in Sources */,
+				2D8CA5D72336A550008DAC14 /* Card.swift in Sources */,
+				2D2C30AE233474A50056E216 /* Service.swift in Sources */,
 				2D90B2322331DDB100E74F36 /* Colors.swift in Sources */,
 				2DE6EB1E23307FA3000383C5 /* CardButton.swift in Sources */,
 				2DD4EA8823288C0600B11F90 /* ShopifyChallenge.xcdatamodeld in Sources */,
+				2D8CA5D52336A4CB008DAC14 /* GameController.swift in Sources */,
 				2DD4EA8023288C0600B11F90 /* AppDelegate.swift in Sources */,
+				2D2C30AC2334742F0056E216 /* Product.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
