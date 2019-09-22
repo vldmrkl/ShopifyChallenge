@@ -21,6 +21,7 @@ class GameController {
         }
     }
     var openedCardIndex: Int?
+    var matchesFound: Int = 0
 
     init(numberOfPairs: Int) {
         self.numberOfPairs = numberOfPairs
@@ -34,6 +35,7 @@ class GameController {
                 if cards[index].product == cards[openedCardIndex].product {
                     cards[index].isMatched = true
                     cards[openedCardIndex].isMatched = true
+                    matchesFound += 1
                 } else {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
                         self.cards[index].isFacedUp = false
