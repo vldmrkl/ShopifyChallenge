@@ -15,7 +15,12 @@ protocol ModalHandler {
 class ViewController: UIViewController, ModalHandler {
     var cardsInASet: Int {
         get {
-            return UserDefaults.standard.integer(forKey: "cardsInASet")
+            if UserDefaults.standard.object(forKey: "cardsInASet") != nil {
+                return UserDefaults.standard.integer(forKey: "cardsInASet")
+            } else {
+                return 2
+            }
+
         }
     }
     var game: GameController = GameController(cardsNumber: 20, cardsInASet: 4)
@@ -44,7 +49,7 @@ class ViewController: UIViewController, ModalHandler {
     }
 
     func setUpLayout() {
-        let settingsButton = UIButton(frame: CGRect(x: view.frame.width - 40, y: 30, width: 30, height: 30))
+        let settingsButton = UIButton(frame: CGRect(x: view.frame.width - 40, y: 40, width: 30, height: 30))
         settingsButton.setImage(UIImage(named: "settings-icon.png"), for: .normal)
         self.view.addSubview(settingsButton)
         settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
