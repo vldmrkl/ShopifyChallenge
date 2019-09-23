@@ -11,7 +11,8 @@ import Foundation
 class GameController {
     private let service = Service()
     var cards: [Card] = []
-    var numberOfPairs: Int
+    var numberOfSets: Int
+    var cardsInASet: Int
     var products: [Product] = [] {
         didSet {
             for product in products {
@@ -21,11 +22,14 @@ class GameController {
         }
     }
     var openedCardIndex: Int?
+    var openedCardsIndeces: [Int] = []
     var matchesFound: Int = 0
+    var currentMatches: Int = 0
     var flipsMade: Int = 0
 
-    init(numberOfPairs: Int) {
-        self.numberOfPairs = numberOfPairs
+    init(cardsNumber: Int, cardsInASet: Int) {
+        self.numberOfSets = cardsNumber / cardsInASet
+        self.cardsInASet = cardsInASet
         cards = []
         fetchData()
     }
@@ -33,25 +37,37 @@ class GameController {
     func updateCard(at index: Int, handler: @escaping (Result<[Int], Error>) -> Void) {
         flipsMade += 1
         if !cards[index].isMatched {
-            if let openedCardIndex = openedCardIndex, index != openedCardIndex {
+            if openedCardsIndeces.count > 0 && !openedCardsIndeces.contains(index) {
                 cards[index].isFacedUp = true
-                if cards[index].product == cards[openedCardIndex].product {
-                    cards[index].isMatched = true
-                    cards[openedCardIndex].isMatched = true
-                    matchesFound += 1
+                let indexOfOpenedCard = openedCardsIndeces[0]
+                self.openedCardsIndeces.append(index)
+                if cards[index].product == cards[indexOfOpenedCard].product {
+                    currentMatches += 1
+                    if currentMatches == cardsInASet - 1 {
+                        for index in openedCardsIndeces {
+                            cards[index].isMatched = true
+                        }
+                        matchesFound += 1
+                        currentMatches = 0
+                        self.openedCardsIndeces = []
+                    }
                 } else {
+                    currentMatches = 0
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
-                        self.cards[index].isFacedUp = false
-                        self.cards[openedCardIndex].isFacedUp = false
-                        handler(.success([index, openedCardIndex]))
+                        for index in self.openedCardsIndeces {
+                            self.cards[index].isFacedUp = false
+                        }
+                        let copyIndeces = self.openedCardsIndeces
+                        self.openedCardsIndeces = []
+                        handler(.success(copyIndeces))
                     }
                 }
-                self.openedCardIndex = nil
                 handler(.success([index]))
             } else {
+                openedCardsIndeces.append(index)
                 openedCardIndex = index
                 cards[index].isFacedUp = true
-                handler(.success([index]))
+                handler(.success(openedCardsIndeces))
             }
         }
     }
@@ -60,7 +76,7 @@ class GameController {
         service.fetchProducts { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
-                case .success(let products): self?.products = Array(products[0 ..< 10])
+                case .success(let products): self?.products = Array(products[0 ..< self!.numberOfSets])
                 case .failure: self?.products = []
                 }
             }
@@ -69,7 +85,9 @@ class GameController {
 
     func createPairFor(_ product: Product) {
         let card = Card(product)
-        cards += [card, card]
+        for _ in 0 ..< cardsInASet {
+            cards.append(card)
+        }
     }
 }
 

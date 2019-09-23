@@ -43,7 +43,7 @@ class ScoreViewController: UIViewController {
         playAgainButton.translatesAutoresizingMaskIntoConstraints = false
         playAgainButton.layer.cornerRadius = 10.0
         playAgainButton.layer.masksToBounds = true
-        playAgainButton.setTitle("PlayAgain", for: .normal)
+        playAgainButton.setTitle("Play Again", for: .normal)
         playAgainButton.titleLabel?.textAlignment = .center
         playAgainButton.setGradientBackground(colorOne: Colors.mintGreen, colorTwo: Colors.darkGreen)
         playAgainButton.addTarget(self, action: #selector(startNewGame), for: .touchUpInside)

@@ -13,12 +13,18 @@ protocol ModalHandler {
 }
 
 class ViewController: UIViewController, ModalHandler {
-    var game: GameController = GameController(numberOfPairs: 10)
+    var cardsInASet: Int {
+        get {
+            return UserDefaults.standard.integer(forKey: "cardsInASet")
+        }
+    }
+    var game: GameController = GameController(cardsNumber: 20, cardsInASet: 4)
     var cardButtons: [CardButton] = []
     var scoreLabel: UILabel!
 
     override func loadView() {
         super.loadView()
+        game = GameController(cardsNumber: 20, cardsInASet: cardsInASet)
         setUpLayout()
     }
 
@@ -33,7 +39,16 @@ class ViewController: UIViewController, ModalHandler {
         }
     }
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func setUpLayout() {
+        let settingsButton = UIButton(frame: CGRect(x: view.frame.width - 40, y: 30, width: 30, height: 30))
+        settingsButton.setImage(UIImage(named: "settings-icon.png"), for: .normal)
+        self.view.addSubview(settingsButton)
+        settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
+
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .center
@@ -48,7 +63,7 @@ class ViewController: UIViewController, ModalHandler {
         verticalStackView.addArrangedSubview(appImageView)
 
         scoreLabel = UILabel()
-        scoreLabel.text = "Matches: \(game.matchesFound)"
+        scoreLabel.text = "Matches: \(game.matchesFound)/\(game.numberOfSets)"
         scoreLabel.textColor = .white
         scoreLabel.font = UIFont.systemFont(ofSize: 25.0)
         verticalStackView.addArrangedSubview(scoreLabel)
@@ -88,13 +103,16 @@ class ViewController: UIViewController, ModalHandler {
                 if !game.cards[index].isMatched {
                     UIView.transition(with: btn, duration: 0.3, options: .transitionFlipFromRight, animations: nil, completion: nil)
                 } else {
-                    scoreLabel.text = "Matches: \(game.matchesFound)"
-                    if game.matchesFound == 10 {
-                        let scoreViewController = ScoreViewController()
-                        scoreViewController.flips = game.flipsMade
-                        scoreViewController.delegate = self
-                        scoreViewController.modalPresentationStyle = .overCurrentContext
-                        present(scoreViewController, animated: true, completion: nil)
+                    scoreLabel.text = "Matches: \(game.matchesFound)/\(game.numberOfSets)"
+                    if game.matchesFound == game.numberOfSets {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.75) {
+                            let scoreViewController = ScoreViewController()
+                            scoreViewController.flips = self.game.flipsMade
+                            scoreViewController.delegate = self
+                            scoreViewController.modalPresentationStyle = .overCurrentContext
+                            self.present(scoreViewController, animated: true, completion: nil)
+                        }
+
                     }
                 }
             }
@@ -102,13 +120,13 @@ class ViewController: UIViewController, ModalHandler {
     }
 
     func startNewGame() {
-        print("DISMISSED")
         for view in self.view.subviews {
             view.removeFromSuperview()
         }
+
         cardButtons = []
-        scoreLabel.text = "Matches: 0"
-        game = GameController(numberOfPairs: 10)
+        scoreLabel.text = "Matches: 0/\(game.numberOfSets)"
+        game = GameController(cardsNumber: 20, cardsInASet: cardsInASet)
         setUpLayout()
     }
 
@@ -122,5 +140,12 @@ class ViewController: UIViewController, ModalHandler {
                 }
             }
         }
+    }
+
+    @objc func openSettings(sender: UIButton) {
+        let settingsViewController = SettingsViewController()
+        settingsViewController.delegate = self
+        settingsViewController.modalPresentationStyle = .overCurrentContext
+        self.present(settingsViewController, animated: true, completion: nil)
     }
 }
