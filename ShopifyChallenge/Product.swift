@@ -18,10 +18,10 @@ extension Product {
         guard let id = json["id"] as? Int,
             let image = json["image"] as? [String: Any],
             let imageSrc = image["src"] as? String
-        else {
-            return nil
+            else {
+                return nil
         }
-
+        
         self.id = id
         self.imageSrc = imageSrc
     }

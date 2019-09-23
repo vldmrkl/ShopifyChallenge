@@ -15,7 +15,7 @@ class SettingsViewController: UIViewController {
     var cardsInASetLabel = UILabel()
     var cardsInASet: Int = 2
     var prevValue: Int = 0
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         if UserDefaults.standard.object(forKey: "cardsInASet") != nil {
@@ -23,21 +23,21 @@ class SettingsViewController: UIViewController {
         }
         setUpView()
     }
-
+    
     func setUpView() {
         view.backgroundColor = Colors.darkGrey
-
+        
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .leading
         verticalStackView.distribution = .equalSpacing
         verticalStackView.spacing = 20
-
+        
         cardsInASetLabel.text = "Number of cards in a set: \(cardsInASet)"
         cardsInASetLabel.textColor = .white
         cardsInASetLabel.font = UIFont.systemFont(ofSize: 20.0)
         verticalStackView.addArrangedSubview(cardsInASetLabel)
-
+        
         slider.translatesAutoresizingMaskIntoConstraints = false
         slider.center = self.view.center
         slider.maximumValue = 5
@@ -47,7 +47,7 @@ class SettingsViewController: UIViewController {
         verticalStackView.addArrangedSubview(slider)
         slider.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
         slider.widthAnchor.constraint(equalToConstant: 300).isActive = true
-
+        
         let saveButton = UIButton(frame: CGRect(x: 0, y: 0, width: 300, height: 50))
         saveButton.translatesAutoresizingMaskIntoConstraints = false
         saveButton.layer.cornerRadius = 10.0
@@ -59,22 +59,22 @@ class SettingsViewController: UIViewController {
         verticalStackView.addArrangedSubview(saveButton)
         saveButton.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
         saveButton.widthAnchor.constraint(equalToConstant: 300).isActive = true
-
+        
         verticalStackView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(verticalStackView)
         verticalStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         verticalStackView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor).isActive = true
     }
-
+    
     @objc func changeValue(_ sender: UISlider) {
         if Int(sender.value) == 3 {
             sender.setValue(4, animated: false)
         }
-
+        
         cardsInASet = Int(sender.value)
         cardsInASetLabel.text = "Number of cards in a set: \(cardsInASet)"
     }
-
+    
     @objc func saveSettings(sender: UIButton) {
         UserDefaults.standard.set(cardsInASet, forKey: "cardsInASet")
         if let delegate = self.delegate {

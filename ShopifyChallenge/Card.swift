@@ -23,7 +23,7 @@ struct Card {
             return UIImage()
         }
     }
-
+    
     init(_ product: Product) {
         self.product = product
     }

@@ -20,66 +20,65 @@ class ViewController: UIViewController, ModalHandler {
             } else {
                 return 2
             }
-
         }
     }
     var game: GameController = GameController(cardsNumber: 20, cardsInASet: 4)
     var cardButtons: [CardButton] = []
     var scoreLabel: UILabel!
-
+    
     override func loadView() {
         super.loadView()
         game = GameController(cardsNumber: 20, cardsInASet: cardsInASet)
         setUpLayout()
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
-
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         for cardButton in cardButtons {
             cardButton.setGradientBackground(colorOne: Colors.purple, colorTwo: Colors.darkPurple)
         }
     }
-
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
-
+    
     func setUpLayout() {
         let settingsButton = UIButton(frame: CGRect(x: view.frame.width - 40, y: 40, width: 30, height: 30))
         settingsButton.setImage(UIImage(named: "settings-icon.png"), for: .normal)
         self.view.addSubview(settingsButton)
         settingsButton.addTarget(self, action: #selector(openSettings), for: .touchUpInside)
-
+        
         let verticalStackView = UIStackView()
         verticalStackView.axis = .vertical
         verticalStackView.alignment = .center
         verticalStackView.distribution = .equalSpacing
         verticalStackView.spacing = 20
-
+        
         let appLogo = UIImage(named: "matchify")
         let appImageView = UIImageView(image: appLogo)
         appImageView.widthAnchor.constraint(equalToConstant: 300).isActive = true
         appImageView.heightAnchor.constraint(equalToConstant: 50).isActive = true
         appImageView.contentMode = .scaleAspectFit
         verticalStackView.addArrangedSubview(appImageView)
-
+        
         scoreLabel = UILabel()
         scoreLabel.text = "Matches: \(game.matchesFound)/\(game.numberOfSets)"
         scoreLabel.textColor = .white
         scoreLabel.font = UIFont.systemFont(ofSize: 25.0)
         verticalStackView.addArrangedSubview(scoreLabel)
-
+        
         for _ in 0..<5 {
             let stackView = UIStackView()
             stackView.axis = .horizontal
             stackView.alignment = .center
             stackView.distribution = .equalSpacing
             stackView.spacing = 10
-
+            
             for _ in 0..<4 {
                 let cardButton = CardButton(frame: CGRect(x: 0, y: 0, width: 75, height: 85))
                 cardButtons.append(cardButton)
@@ -95,7 +94,7 @@ class ViewController: UIViewController, ModalHandler {
         verticalStackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor).isActive = true
         verticalStackView.centerYAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.centerYAnchor).isActive = true
     }
-
+    
     func updateButtonViews(indeces: [Int]) {
         for index in indeces {
             let btn = cardButtons[index]
@@ -117,24 +116,24 @@ class ViewController: UIViewController, ModalHandler {
                             scoreViewController.modalPresentationStyle = .overCurrentContext
                             self.present(scoreViewController, animated: true, completion: nil)
                         }
-
+                        
                     }
                 }
             }
         }
     }
-
+    
     func startNewGame() {
         for view in self.view.subviews {
             view.removeFromSuperview()
         }
-
+        
         cardButtons = []
         scoreLabel.text = "Matches: 0/\(game.numberOfSets)"
         game = GameController(cardsNumber: 20, cardsInASet: cardsInASet)
         setUpLayout()
     }
-
+    
     @objc func flipCard(sender: CardButton) {
         if let cardIndex = cardButtons.firstIndex(of: sender) {
             updateButtonViews(indeces: [cardIndex])
@@ -146,7 +145,7 @@ class ViewController: UIViewController, ModalHandler {
             }
         }
     }
-
+    
     @objc func openSettings(sender: UIButton) {
         let settingsViewController = SettingsViewController()
         settingsViewController.delegate = self

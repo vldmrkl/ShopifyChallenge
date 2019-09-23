@@ -26,14 +26,14 @@ class GameController {
     var matchesFound: Int = 0
     var currentMatches: Int = 0
     var flipsMade: Int = 0
-
+    
     init(cardsNumber: Int, cardsInASet: Int) {
         self.numberOfSets = cardsNumber / cardsInASet
         self.cardsInASet = cardsInASet
         cards = []
         fetchData()
     }
-
+    
     func updateCard(at index: Int, handler: @escaping (Result<[Int], Error>) -> Void) {
         flipsMade += 1
         if !cards[index].isMatched {
@@ -71,7 +71,7 @@ class GameController {
             }
         }
     }
-
+    
     func fetchData() {
         service.fetchProducts { [weak self] result in
             DispatchQueue.main.async {
@@ -82,7 +82,7 @@ class GameController {
             }
         }
     }
-
+    
     func createPairFor(_ product: Product) {
         let card = Card(product)
         for _ in 0 ..< cardsInASet {

@@ -13,12 +13,12 @@ class CardButton: UIButton {
         super.init(frame: frame)
         initButton()
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         initButton()
     }
-
+    
     func initButton() {
         layer.cornerRadius = 10
         layer.masksToBounds = true
